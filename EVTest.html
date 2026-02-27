@@ -1,0 +1,62 @@
+<html>
+  <head>
+    <title>Test 2d</title>
+  </head>
+  <body>
+    <script src="EV2D.js"></script>
+<script>
+      ///Starting My Game Engine
+      game=new EV2DEngine()
+      //Registering Loop
+      function loop(){
+        game.render();
+        requestAnimationFrame(loop)
+      }
+      loop()
+      //Designing Player with position vector and texture vector
+      let rot=1
+      boardTexture=new Texture()
+      board=new Box(new Vector(50,30),boardTexture)
+      board.beforeRender=(e)=>{
+        boardTexture.fillCustom((ctx,canvas)=>{
+          canvas.width=500
+          canvas.height=200
+          ctx.font="50px Cursive"
+          ctx.fillText("Simple Speed Tester ",0,50)
+          ctx.alignment="center"
+          ctx.font="40px Cursive"
+          ctx.fillText("Speed= "+String(rot),100,100)
+        })
+      }
+      board.settings.hasOutline=false
+      parent=new Box(new Vector(game.canvas.width/2-50,game.canvas.height/2-50),new Texture())
+      parent.fillWithColor=("blue")
+      parent.beforeRender=(e)=>{
+        e.rotation+=rot
+      }
+      player=new Box(new Vector(10,10),new Texture())
+      player.parent=parent
+      player.texture.fillWithColor("green")
+      pl2=new Box(new Vector(20,20),new Texture())
+      pl2.texture.fillWithColor("white")
+      pl2.parent=parent
+      pl2.settings.hasOutline=false
+      game.add(player)
+      game.add(parent)
+      game.add(board)
+      game.add(pl2)
+      
+      //Buttons
+      new Button("+",[["width","100px"],["height","100px"],["background","black"],["color","white"],["outline","1px solid blue"]]).onClick=(e)=>{
+        rot+=1
+      }
+      new Button("-",[["left","50%"],["width","100px"],["height","100px"],["background","black"],["color","white"],["outline","1px solid blue"]]).onClick=(e)=>{
+        rot-=1
+      }
+      new Button("stop",[["left","30px"],["width","100px"],["height","100px"],["background","black"],["color","white"],["outline","1px solid blue"]]).onClick=(e)=>{
+        rot=0
+      }
+      console.log(player.getDirection("west"))
+    </script>
+  </body>
+</html>

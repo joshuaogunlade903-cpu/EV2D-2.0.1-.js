@@ -1,0 +1,47 @@
+<html>
+<head>
+  <title>Test 2d</title>
+</head>
+<body>
+  <script src="EV2D.js"></script>
+  <script>
+    ///Starting My Game Engine
+    game = new EV2DEngine()
+    game.optimize()
+    //Registering Loop
+    function loop() {
+      game.render();
+      requestAnimationFrame(loop)
+    }
+    loop()
+    //Designing Player with position vector and texture vector
+    const player=Entity()
+    game.add(player)
+    //player.setMoveWith(vec2(4,0))
+    RGD.add(player)
+    
+    const second=Entity({position:vec2(game.width-100,0),color:"blue"})
+    RGD.add(second)
+    game.add(second)
+    second.settings.rigidResult=false//second is a static body it cannot move
+    second.mass=1.4//default mass for all objects is 1
+    const ground=Ground(game,"lightgreen",100)
+    game.add(ground)
+    ground.createGravity(game.entities,[second])
+    ground.addGravity(game)
+    ground.setGravity(vec2(0,2))
+    
+    game.startProcess(RGD,1)
+   // game.setBackground("black")
+    
+    const joystick=new Joystick({baseColor:"rgba(255,100,255,0.8)",stickColor:"rgba(255,100,100,0.8)"})
+    player.settings.rigidElastic=true
+    joystick.positionLB("50px","50px")
+    Clock.register_loop(()=>{
+      player.moveWith.x=canMove(player,second,vec2(Math.sign(joystick.getPosition().x))).x
+    })
+    const collider=new BoxCollider(player)
+    game.add(collider)
+  </script>
+</body>
+</html>
